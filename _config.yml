@@ -33,7 +33,7 @@ collections:
   supervisors:
     output: true
     permalink: /supervisors/:path/
-    relative_directory: /
+    relative_directory: /supervisor_data/_supervisors
 
 defaults:
   - scope:
