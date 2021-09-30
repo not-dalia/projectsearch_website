@@ -33,7 +33,6 @@ collections:
   supervisors:
     output: true
     permalink: /supervisors/:path/
-    relative_directory: /supervisor_data/_supervisors
 
 defaults:
   - scope:
@@ -42,6 +41,7 @@ defaults:
     values:
       layout: "supervisor"
 
+s_module: "KV6003"
 # Build settings
 # theme: minima
 plugins:

@@ -6,7 +6,8 @@ layout: default
   <div class="results-container">
     <div class="content">
       <div class="results">
-        {% for supervisor in site.supervisors %}
+        {% assign supervisors = site.supervisors | where_exp:"supervisor", "supervisor.module contains site.s_module" %}
+        {% for supervisor in supervisors %}
         {% if supervisor.available %}
         <a href="{{supervisor.url}}" data-url="{{supervisor.url}}" class="result-url" data-ref="{{supervisor.url | slugify}}">
           <div class="result-card" id="result-{{supervisor.url | slugify}}">
