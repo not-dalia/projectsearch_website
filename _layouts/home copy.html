@@ -1,0 +1,194 @@
+---
+layout: default
+---
+<div class="ps-container" id="home">
+  {% include search.html %}
+  <div class="results-container">
+    <div class="content">
+      <div class="results">
+        <div class="result-card">
+          <div class="title-row">
+            <div class="title">
+              Kyle <span class="text-blue">Montague</span>
+            </div>
+          </div>
+          <div class="excerpt">
+            ... some stuff goes here <span class="text-blue">in blue</span> and then some ...
+          </div>
+          <div class="tags">
+            <div class="tag">HCI</div>
+            <div class="tag">Research Methods</div>
+            <div class="tag tag-blue">Machine Learning</div>
+            <div class="tag">Human Computer Interaction</div>
+          </div>
+        </div>
+
+        <div class="result-card">
+          <div class="title-row">
+            <div class="title">
+              Kyle Montague
+            </div>
+          </div>
+          <div class="excerpt">
+            ... some stuff goes here <span class="text-blue">in blue</span> and then some ...
+          </div>
+          <div class="tags">
+            <div class="tag">HCI</div>
+            <div class="tag">Research Methods</div>
+            <div class="tag tag-blue">Machine Learning</div>
+            <div class="tag">Human Computer Interaction</div>
+          </div>
+        </div>
+
+        <div class="result-card">
+          <div class="title-row">
+            <div class="title">
+              Kyle Montague
+            </div>
+          </div>
+          <div class="excerpt">
+            ... some stuff goes here <span class="text-blue">in blue</span> and then some ...
+          </div>
+          <div class="tags">
+            <div class="tag">HCI</div>
+            <div class="tag">Research Methods</div>
+            <div class="tag tag-blue">Machine Learning</div>
+            <div class="tag">Human Computer Interaction</div>
+          </div>
+        </div>
+
+        <div class="result-card">
+          <div class="title-row">
+            <div class="title">
+              Kyle Montague
+            </div>
+          </div>
+          <div class="excerpt">
+            ... some stuff goes here <span class="text-blue">in blue</span> and then some ...
+          </div>
+          <div class="tags">
+            <div class="tag">HCI</div>
+            <div class="tag">Research Methods</div>
+            <div class="tag">Human Computer Interaction</div>
+            <div class="tag tag-blue">Machine Learning</div>
+            <div class="tag">Human Computer Interaction</div>
+          </div>
+        </div>
+
+        <div class="result-card">
+          <div class="title-row">
+            <div class="title">
+              Kyle Montague
+            </div>
+          </div>
+          <div class="excerpt">
+            ... some stuff goes here <span class="text-blue">in blue</span> and then some ...
+          </div>
+          <div class="tags">
+            <div class="tag">HCI</div>
+            <div class="tag">Research Methods</div>
+            <div class="tag tag-blue">Machine Learning</div>
+            <div class="tag">Human Computer Interaction</div>
+          </div>
+        </div>
+
+        <div class="result-card">
+          <div class="title-row">
+            <div class="title">
+              Kyle Montague
+            </div>
+          </div>
+          <div class="excerpt">
+            ... some stuff goes here <span class="text-blue">in blue</span> and then some ...
+          </div>
+          <div class="tags">
+            <div class="tag">HCI</div>
+            <div class="tag">Research Methods</div>
+            <div class="tag tag-blue">Machine Learning</div>
+            <div class="tag">Human Computer Interaction</div>
+          </div>
+        </div>
+
+        <div class="result-card">
+          <div class="title-row">
+            <div class="title">
+              Kyle Montague
+            </div>
+          </div>
+          <div class="excerpt">
+            ... some stuff goes here <span class="text-blue">in blue</span> and then some ...
+          </div>
+          <div class="tags">
+            <div class="tag">HCI</div>
+            <div class="tag">Research Methods</div>
+            <div class="tag tag-blue">Machine Learning</div>
+            <div class="tag">Human Computer Interaction</div>
+          </div>
+        </div>
+        
+      </div>
+      <div class="filter">
+        <h3>Filters</h3>
+        <div class="separator"></div>
+        <div class="filter-box">
+          <div class="filter-header" onclick="toggleFilter(this)">
+            <button class="collapse-button">
+              <!-- <img src="/assets/images/arrow.svg" alt="" class="collapse-button"> -->
+              <div class="arrow"></div>
+            </button>
+            <h4>Research Themes</h4>
+          </div>
+          <div class="filter-items">
+            {% for theme in site.data.form_data.research_themes %}
+            <div class="input-row">
+              <label for="theme-{{theme | handleize}}">
+                <input type="checkbox" id="theme-{{theme | handleize}}" name="{{theme | handleize}}">
+                <span>{{theme | handleize}}</span>
+              </label>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+        <div class="filter-box">
+          <div class="filter-header" onclick="toggleFilter(this)">
+            <button class="collapse-button">
+              <div class="arrow"></div>
+            </button>
+            <h4>Additional Keywords</h4>
+          </div>
+          <div class="filter-items">
+            {% for theme in site.data.form_data.additional_keywords %}
+            <div class="input-row">
+              <label for="theme-{{theme | handleize}}">
+                <input type="checkbox" id="theme-{{theme | handleize}}" name="{{theme | handleize}}">
+                <span>{{theme | handleize}}</span>
+              </label>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+        <div class="filter-box">
+          <div class="filter-header" onclick="toggleFilter(this)">
+            <button class="collapse-button">
+              <div class="arrow"></div>
+            </button>
+            <h4>Technologies & Techniques</h4>
+          </div>
+          <div class="filter-items">
+            {% for theme in site.data.form_data.technologies_languages %}
+            <div class="input-row">
+              <label for="theme-{{theme | handleize}}">
+                <input type="checkbox" id="theme-{{theme | handleize}}" name="{{theme | handleize}}">
+                <span>{{theme | handleize}}</span>
+              </label>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="ps-container" id="supervisor">
+</div>

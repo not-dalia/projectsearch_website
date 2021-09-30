@@ -1,0 +1,62 @@
+---
+layout: default
+---
+<div class="ps-container" id="supervisor">
+  <div class="supervisor-container">
+    <div class="content">
+
+      {% if page.available %}
+      <div class="supervisor-card">
+        <h2 class="title">
+          {{ page.title }}
+        </h2>
+        <div class="group-row">
+          <div class="research-group" data-tag-value="{{page.research_group | slugify}}">{{page.research_group}}</div>
+        </div>
+        <div class="research-themes">
+          <div class="tags tags-themes">
+            {% for tag in page.research_themes %}
+              <div class="tag tag-theme" id="tag-theme-{{tag | slugify}}" data-tag-value="{{tag | slugify}}">{{tag}}</div>
+            {% endfor %}
+            {% for tag in page.additional_keywords %}
+              <div class="tag tag-keyword" id="tag-keyword-{{tag | slugify}}" data-tag-value="{{tag | slugify}}">{{tag}}</div>
+            {% endfor %}
+            {% for tag in page.technologies_languages %}
+              <div class="tag tag-technology" id="tag-technology-{{tag | slugify}}" data-tag-value="{{tag | slugify}}">{{tag}}</div>
+            {% endfor %}
+          </div>
+        </div>
+        <div class="additional-details">{{ page.additional_details | strip | markdownify }}</div>
+        <div class="contact-details">
+          {% if page.office_hours and page.office_hours != blank %}
+          <div class="contact office-hours">
+            <img src="/assets/images/time.svg" alt="">
+            <div>
+              <div class="title">Office Hours</div>
+              <span>{{ page.office_hours | xml_escape | strip }}</span>
+            </div>
+          </div>
+          {% endif %}
+          {% if page.email and page.email != blank %}
+          <div class="contact contact-email">
+            <img src="/assets/images/mail.svg" alt="">
+            <a href="mailto:{{page.email}}" target="blank">{{ page.email }}</a>
+          </div>
+          {% endif %}
+          {% if page.website and page.website != blank %}
+          <div class="contact contact-url">
+            <img src="/assets/images/url.svg" alt="">
+            <a href="{{page.website}}" target="blank">{{ page.website }}</a>
+          </div>
+          {% endif %}
+        </div>
+      </div>
+      {% else %}
+      <div class="supervisor-card not-available">
+
+      </div>
+      {% endif %}
+
+    </div>
+  </div>
+</div>

@@ -1,0 +1,513 @@
+---
+layout: default
+---
+<div class="ps-container" id="home">
+{% include search.html %}
+  <div class="results-container">
+    <div class="content">
+      <div class="results">
+        {% for supervisor in site.supervisors %}
+        {% if supervisor.available %}
+        <a href="{{supervisor.url}}" data-url="{{supervisor.url}}" class="result-url" data-ref="{{supervisor.url | slugify}}">
+          <div class="result-card" id="result-{{supervisor.url | slugify}}">
+            <div class="title-row">
+              <div class="title">{{supervisor.title}}</div>
+            </div>
+            <div class="group-row">
+              <div class="research-group" data-tag-value="{{supervisor.research_group | slugify}}">{{supervisor.research_group}}</div>
+            </div>
+            <div class="excerpt">
+              <!-- {{ supervisor.additional_details | strip_html | strip_newlines | xml_escape }} -->
+            </div>
+            <div class="tags">
+              {% for tag in supervisor.research_themes %}
+                <div class="tag tag-theme {% if forloop.index > 3 %}hide{% endif %}" id="tag-theme-{{tag | slugify}}" data-tag-value="{{tag | slugify}}">{{tag}}</div>
+              {% endfor %}
+              {% for tag in supervisor.additional_keywords %}
+                <div class="tag tag-keyword {% if forloop.index > 3 %}hide{% endif %}" id="tag-keyword-{{tag | slugify}}" data-tag-value="{{tag | slugify}}">{{tag}}</div>
+              {% endfor %}
+              {% for tag in supervisor.technologies_languages %}
+                <div class="tag tag-technology {% if forloop.index > 3 %}hide{% endif %}" id="tag-technology-{{tag | slugify}}" data-tag-value="{{tag | slugify}}">{{tag}}</div>
+              {% endfor %}
+            </div>
+          </div>
+        </a>
+        {% endif %}
+        {% endfor %}
+        
+      </div>
+      <div class="overlay" onclick="toggleFilterMenu()">
+      </div>
+
+      <div class="filter">
+        <div class="filter-main-header">
+          <div class="close-button" >
+            <div class="close-icon" onclick="toggleFilterMenu()">&#10006;</div>
+          </div>
+          <h3>Filters</h3>
+          <div class="separator"></div>
+        </div>
+        <!-- <div class="filter-box" id="filter-research_groups">
+          <div class="filter-header" onclick="toggleFilter(this)">
+            <button class="collapse-button">
+              <div class="arrow"></div>
+            </button>
+            <h4>Research Groups</h4>
+          </div>
+          <div class="filter-items">
+      
+          </div>
+        </div> -->
+        <div class="filter-box collapsed" id="filter-research_theme">
+          <div class="filter-header" onclick="toggleFilter(this)">
+            <button class="collapse-button">
+              <!-- <img src="/assets/images/arrow.svg" alt="" class="collapse-button"> -->
+              <div class="arrow"></div>
+            </button>
+            <h4>Project Themes</h4>
+          </div>
+          <div class="filter-items">
+      
+          </div>
+        </div>
+        <div class="filter-box collapsed" id="filter-additional_keywords">
+          <div class="filter-header" onclick="toggleFilter(this)">
+            <button class="collapse-button">
+              <div class="arrow"></div>
+            </button>
+            <h4>Additional Keywords</h4>
+          </div>
+          <div class="filter-items">
+      
+          </div>
+        </div>
+        <div class="filter-box collapsed" id="filter-technologies_languages">
+          <div class="filter-header" onclick="toggleFilter(this)">
+            <button class="collapse-button">
+              <div class="arrow"></div>
+            </button>
+            <h4>Technologies & Techniques</h4>
+          </div>
+          <div class="filter-items">
+      
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="ps-container" id="supervisor" style="display: none;">
+{% include supervisor.html %}
+</div>
+
+<script>
+  String.prototype.slugify = function (separator = "-") {
+    return this
+        .toString()
+        .normalize('NFD')                   // split an accented letter in the base letter and the acent
+        .replace(/[\u0300-\u036f]/g, '')   // remove all previously split accents
+        .toLowerCase()
+        .trim()
+        .replace(/[^a-z0-9 ]/g, '')   // remove all chars not letters, numbers and spaces (to be replaced)
+        .replace(/\s+/g, separator);
+  };
+
+  function getHtmlNodeFromString(htmlString) {
+    let div = document.createElement('div');
+    div.innerHTML = htmlString.trim();
+    return div.firstChild;
+  }
+
+  function populateFilters() {
+    /* let research_groups_box = document.querySelector('#filter-research_groups')
+    let research_groups_items = research_groups_box.querySelector('.filter-items')
+    research_groups_items.innerHTML = ''
+    window.research_groups = window.research_groups.sort((a, b) => a.tag.localeCompare(b.tag))
+    for (var i in window.research_groups) {
+      let item = `<div class="input-row">
+              <label for="theme-${window.research_groups[i].slug}">
+                <input type="checkbox" id="theme-${window.research_groups[i].slug}" name="${window.research_groups[i].slug}" onclick="updateFilter(this)" value="${window.research_groups[i].slug}">
+                <span>${window.research_groups[i].tag}</span>
+              </label>
+            </div>`
+    research_groups_items.innerHTML += item;
+    } */
+    
+    let research_theme_box = document.querySelector('#filter-research_theme')
+    let research_theme_items = research_theme_box.querySelector('.filter-items')
+    research_theme_items.innerHTML = ''
+    window.research_themes = window.research_themes.sort((a, b) => a.tag.localeCompare(b.tag))
+    for (var i in window.research_themes) {
+      let item = `<div class="input-row">
+              <label for="theme-${window.research_themes[i].slug}">
+                <input type="checkbox" id="theme-${window.research_themes[i].slug}" name="${window.research_themes[i].slug}" onclick="updateFilter(this)" value="${window.research_themes[i].slug}">
+                <span>${window.research_themes[i].tag}</span>
+              </label>
+            </div>`
+      research_theme_items.innerHTML += item;
+    }
+
+    let additional_keywords_box = document.querySelector('#filter-additional_keywords')
+    let additional_keywords_items = additional_keywords_box.querySelector('.filter-items')
+    additional_keywords_items.innerHTML = ''
+    window.additional_keywords = window.additional_keywords.sort((a, b) => a.tag.localeCompare(b.tag))
+
+    for (var i in window.additional_keywords) {
+      let item = `<div class="input-row">
+              <label for="keyword-${window.additional_keywords[i].slug}">
+                <input type="checkbox" id="keyword-${window.additional_keywords[i].slug}" name="${window.additional_keywords[i].slug}" onclick="updateFilter(this)" value="${window.additional_keywords[i].slug}">
+                <span>${window.additional_keywords[i].tag}</span>
+              </label>
+            </div>`
+      additional_keywords_items.innerHTML += item;
+    }
+
+    let technologies_languages_box = document.querySelector('#filter-technologies_languages')
+    let technologies_languages_items = technologies_languages_box.querySelector('.filter-items')
+    technologies_languages_items.innerHTML = ''
+    window.technologies_languages = window.technologies_languages.sort((a, b) => a.tag.localeCompare(b.tag))
+
+    for (var i in window.technologies_languages) {
+      let item = `<div class="input-row">
+              <label for="technology-${window.technologies_languages[i].slug}">
+                <input type="checkbox" id="technology-${window.technologies_languages[i].slug}" name="${window.technologies_languages[i].slug}" onclick="updateFilter(this)" value="${window.technologies_languages[i].slug}">
+                <span>${window.technologies_languages[i].tag}</span>
+              </label>
+            </div>`
+      technologies_languages_items.innerHTML += item;
+    }
+  }
+
+
+  function updateFilter(el) {
+    populateResults()
+    let filter = document.querySelector('.filter');
+    if (filter.querySelector('input:checked')) {
+      document.querySelector('.filter-button').classList.add('filter-blue')
+    } else {
+      document.querySelector('.filter-button').classList.remove('filter-blue')
+    }
+  }
+
+ function populateResults () {
+    let filter = {
+      groups: [],
+      themes: [],
+      keywords: [],
+      technologies: []
+    }
+    let research_groups = document.querySelectorAll('#filter-research_groups input[type=checkbox]:checked')
+    research_groups.forEach(i => {
+      filter.groups.push(i.value)
+    })
+
+    let research_themes = document.querySelectorAll('#filter-research_theme input[type=checkbox]:checked')
+    research_themes.forEach(i => {
+      filter.themes.push(i.value)
+    })
+
+    let additional_keywords = document.querySelectorAll('#filter-additional_keywords input[type=checkbox]:checked')
+    additional_keywords.forEach(i => {
+      filter.keywords.push(i.value)
+    })
+
+    let technologies_languages = document.querySelectorAll('#filter-technologies_languages input[type=checkbox]:checked')
+    technologies_languages.forEach(i => {
+      filter.technologies.push(i.value)
+    })
+
+    let allHidden = true
+
+    let resultsElement = document.querySelector('.results');
+    for (let k in window.store) {
+      let supervisor = window.store[k].data
+      let supervisorElement = resultsElement.querySelector(`#result-${k}`).parentElement;
+      let render = false;
+      if (filter.groups.length + filter.themes.length + filter.keywords.length + filter.technologies.length === 0) {
+        render = true;
+      } else {
+        let renderGroups = false
+        if (filter.groups.length > 0) {
+          let research_groups_slugified = []
+          let researchGroupElement = supervisorElement.querySelector('.research-group')
+          let tag = researchGroupElement.dataset.tagValue;
+          research_groups_slugified.push(tag);
+          for (let i in filter.groups) {
+            if (!renderGroups && (research_groups_slugified.indexOf(filter.groups[i]) >= 0)) {
+              renderGroups = true;
+              break;
+            }
+          }
+        } else {
+          renderGroups = true;
+        }
+        
+        let renderThemes = false
+        if (renderGroups && filter.themes.length > 0) {
+          let research_themes_slugified = []
+          let researchThemeElements = supervisorElement.querySelectorAll('.tags .tag-theme')
+          researchThemeElements.forEach(tagEl => {
+            let tag = tagEl.dataset.tagValue;
+            research_themes_slugified.push(tag);
+          })
+          for (let i in filter.themes) {
+            if (!renderThemes && (research_themes_slugified.indexOf(filter.themes[i]) >= 0)) {
+              renderThemes = true;
+              break;
+            }
+          }
+        } else if (renderGroups){
+          renderThemes = true;
+        }
+
+        let renderKeywords = false;
+        if (renderThemes && filter.keywords.length > 0) {
+          let additional_keywords_slugified = []
+          let additionalKeywordsElements = supervisorElement.querySelectorAll('.tags .tag-keyword')
+          additionalKeywordsElements.forEach(tagEl => {
+            let tag = tagEl.dataset.tagValue;
+            additional_keywords_slugified.push(tag);
+          })
+          for (let i in filter.keywords) {
+            if (!renderKeywords && (additional_keywords_slugified.indexOf(filter.keywords[i]) >= 0)) {
+              renderKeywords = true;
+              break;
+            }
+          }
+        } else if (renderThemes) {
+          renderKeywords = true
+        }
+
+        let renderTechnologies = false;
+        if (renderKeywords && filter.technologies.length > 0) {
+          let technologies_languages_slugified = [];
+          let TechnologiesElements = supervisorElement.querySelectorAll('.tags .tag-technology')
+          TechnologiesElements.forEach(tagEl => {
+            let tag = tagEl.dataset.tagValue;
+            technologies_languages_slugified.push(tag);
+          })
+          for (let i in filter.technologies) {
+            if (!renderTechnologies && (technologies_languages_slugified.indexOf(filter.technologies[i]) >= 0)) {
+              renderTechnologies = true;
+              break;
+            }
+          }
+        } else if (renderKeywords) {
+          renderTechnologies = true
+        }
+
+        render = renderGroups && renderThemes && renderKeywords && renderTechnologies
+      }
+
+      if (searchQueryResults && searchQueryResults.documents.indexOf(k) < 0) render = false;
+
+      if (!render) {
+        supervisorElement.classList.add('hide')
+        allHidden = allHidden && true
+      } else {
+        supervisorElement.classList.remove('hide')
+        allHidden = allHidden && false
+      }
+
+      let supervisorTitleElement = supervisorElement.querySelector('.title-row .title')
+      let supervisorExcerpt = supervisorElement.querySelector('.excerpt')
+      cleanSpans(supervisorTitleElement)
+      supervisorExcerpt.innerHTML = '';
+
+      let researchGroupElement = supervisorElement.querySelector('.research-group')
+      let tag = researchGroupElement.dataset.tagValue; 
+      if (filter.groups && filter.groups.indexOf(tag) >= 0) {
+        researchGroupElement.classList.add('tag-blue')
+      } else if (searchQueryResults.tokens.some((token) => {
+        let regex = new RegExp('\\b' + token, 'gi')
+        return regex.test(tag)
+      })) {
+        researchGroupElement.classList.add('tag-blue')
+      } else {
+        researchGroupElement.classList.remove('tag-blue')
+      } 
+      
+      
+      let researchThemeElements = supervisorElement.querySelectorAll('.tags .tag-theme')
+      researchThemeElements.forEach(tagEl => {
+        let tag = tagEl.dataset.tagValue;
+        if (filter.themes && filter.themes.indexOf(tag) >= 0) {
+          tagEl.classList.add('tag-blue')
+        } else if (searchQueryResults.tokens.some((token) => {
+          let regex = new RegExp('\\b' + token, 'gi')
+          return regex.test(tag)
+        })) {
+          tagEl.classList.add('tag-blue')
+        } else {
+          tagEl.classList.remove('tag-blue')
+        }
+      })
+
+      let additionalKeywordsElements = supervisorElement.querySelectorAll('.tags .tag-keyword')
+      additionalKeywordsElements.forEach(tagEl => {
+        let tag = tagEl.dataset.tagValue;
+        if (filter.keywords && filter.keywords.indexOf(tag) >= 0) {
+          tagEl.classList.add('tag-blue')
+        } else if (searchQueryResults.tokens.some((token) => {
+          let regex = new RegExp('\\b' + token, 'gi')
+          return regex.test(tag)
+        })) {
+          tagEl.classList.add('tag-blue')
+        } else {
+          tagEl.classList.remove('tag-blue')
+        }
+      })
+
+      let TechnologiesElements = supervisorElement.querySelectorAll('.tags .tag-technology')
+      TechnologiesElements.forEach(tagEl => {
+        let tag = tagEl.dataset.tagValue;
+        if (filter.technologies && filter.technologies.indexOf(tag) >= 0) {
+          tagEl.classList.add('tag-blue')
+        } else if (searchQueryResults.tokens.some((token) => {
+          let regex = new RegExp('\\b' + token, 'gi')
+          return regex.test(tag)
+        })) {
+          tagEl.classList.add('tag-blue')
+        } else {
+          tagEl.classList.remove('tag-blue')
+        }
+      })
+
+      let excerptShow = false;
+      searchQueryResults.tokens.forEach(token => {
+        const tokenIndex = supervisorTitleElement.firstChild.textContent.toLowerCase().indexOf(token.toLowerCase())
+        if (tokenIndex >= 0) {
+          try {
+            const range = document.createRange();
+            range.setStart(supervisorTitleElement.firstChild, tokenIndex)
+            range.setEnd(supervisorTitleElement.firstChild, tokenIndex + token.length)
+            const newParent = document.createElement('span');
+            newParent.classList.add('text-blue')
+            range.surroundContents(newParent);
+          } catch (err) {
+            console.log(err)
+          }
+        }
+
+        let additionalDetails = supervisor.additional_details;
+
+        if (!excerptShow && additionalDetails && additionalDetails.length > 0) {
+          let regex = new RegExp('\\b' + token, 'gi')
+          let regRes = regex.exec(additionalDetails)
+          if (regRes) {
+            let tokenIndexExcerpt = regRes.index;
+            let tokenEl = `<span class='text-blue'>${additionalDetails.substr(tokenIndexExcerpt, token.length)}</span>`
+            let newText = additionalDetails.substr(0, tokenIndexExcerpt) + tokenEl + additionalDetails.substr(tokenIndexExcerpt + token.length);
+            let excerpt = (`${Math.max(tokenIndexExcerpt - 40, 0) === 0 ? '' : '...'}${newText.substr(Math.max(tokenIndexExcerpt - 40, 0), 100 + tokenEl.length)}${newText.length <= Math.max(tokenIndexExcerpt - 40, 0) + 100 + tokenEl.length? '' : '...'}`).replace(/[\r\n]+/g, ' ');
+            supervisorExcerpt.innerHTML = excerpt;
+            excerptShow = true;
+            regex.lastIndex = 0;
+          }
+        }
+      })
+    }
+
+    if (allHidden) {
+      resultsElement.classList.add('no-results')
+    } else {
+      resultsElement.classList.remove('no-results')
+    }
+  }
+
+  function cleanSpans (node) {
+    // let spans = node.querySelectorAll('span.text-blue');
+    // spans.forEach(span => {
+    //   let text = span.textContent || span.innerText;
+    //   let node = document.createTextNode(text);
+    //   span.parentNode.replaceChild(node, span);
+    // })
+    let text = node.innerText;
+    node.innerHTML = text
+  }
+
+  function populateSupervisor (supervisor) {
+    let supervisorContainer = document.querySelector('.ps-container#supervisor');
+    let title = supervisorContainer.querySelector('.title');
+    title.innerText = supervisor.title;
+    let groupContainer = supervisorContainer.querySelector('.group-row');
+    groupContainer.innerHTML = ''
+
+    let groupEl = getHtmlNodeFromString(`<div class="research-group" data-tag-value="${supervisor.data.research_group.slugify()}">${supervisor.data.research_group}</div>`)
+    groupContainer.append(groupEl);
+
+    let themesContainer = supervisorContainer.querySelector('.tags');
+    themesContainer.innerHTML = ''
+    JSON.parse(supervisor.data.research_theme).forEach(tag => {
+      let tagEl = getHtmlNodeFromString(`<div class="tag tag-theme" id="tag-theme-${tag.slugify()}" data-tag-value="${tag.slugify()}">${tag}</div>`)
+      themesContainer.append(tagEl);
+    })
+    JSON.parse(supervisor.data.additional_keywords).forEach(tag => {
+      let tagEl = getHtmlNodeFromString(`<div class="tag tag-keyword" id="tag-theme-${tag.slugify()}" data-tag-value="${tag.slugify()}">${tag}</div>`)
+      themesContainer.append(tagEl);
+    })
+    JSON.parse(supervisor.data.technologies_languages).forEach(tag => {
+      let tagEl = getHtmlNodeFromString(`<div class="tag tag-technology" id="tag-theme-${tag.slugify()}" data-tag-value="${tag.slugify()}">${tag}</div>`)
+      themesContainer.append(tagEl);
+    })
+
+    let detailsContainer = supervisorContainer.querySelector('.additional-details');
+    detailsContainer.innerHTML = supervisor.data.additional_details;
+
+    let officeHoursContainer = supervisorContainer.querySelector('.office-hours');
+    if (supervisor.data.office_hours) {
+      let href = officeHoursContainer.querySelector('span');
+      href.innerText = supervisor.data.office_hours;
+      officeHoursContainer.style.display = 'flex';
+
+    } else {
+      officeHoursContainer.style.display = 'none';
+    }
+
+    
+    let emailContainer = supervisorContainer.querySelector('.contact-email');
+    if (supervisor.data.email) {
+      let href = emailContainer.querySelector('a');
+      href.href = `mailto:${supervisor.data.email}`;
+      href.innerText = supervisor.data.email;
+      emailContainer.style.display = 'flex';
+
+    } else {
+      emailContainer.style.display = 'none';
+    }
+
+    let websiteContainer = supervisorContainer.querySelector('.contact-url');
+    if (supervisor.data.website) {
+      let href = websiteContainer.querySelector('a');
+      href.href = `${supervisor.data.website}`;
+      href.innerText = supervisor.data.website;
+      websiteContainer.style.display = 'flex';
+
+    } else {
+      websiteContainer.style.display = 'none';
+    }
+
+
+  }
+
+  var container = document.querySelector('.results');
+  container.addEventListener('click', function(e) {
+    if (e.target != e.currentTarget) {
+      e.preventDefault();
+      var parentUrl = e.target.closest('.result-url')
+      var data = parentUrl.dataset,
+      url = data.url;
+      history.pushState(data.ref, null, url);
+
+      var supervisor = window.store[data.ref]
+      document.title = "Supervisor Directory | " + supervisor.title;
+      document.querySelector('.ps-container#home').style.display = 'none';
+      populateSupervisor(supervisor);
+      document.querySelector('.ps-container#supervisor').style.display = 'block';
+    }
+    e.stopPropagation();
+  }, false);
+
+  populateFilters();
+  populateResults();
+</script>

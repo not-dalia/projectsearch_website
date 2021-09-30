@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="/assets/css/styles.css">
+  <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+
+  <title>Supervisor Directory {% if page.title != nil %}| {{page.title}}{% endif %}</title>
+</head>
+
+<body>
+  <script>
+    window.store = {
+      {% for supervisor in site.supervisors %}
+        {% if supervisor.available %}
+          '{{ supervisor.url | slugify }}': {
+            'title': '{{ supervisor.title | xml_escape }}',
+            'research_group': '{{ supervisor.research_group | xml_escape }}',
+            'research_theme': '{{ supervisor.research_themes | join: "," | xml_escape }}',
+            'additional_keywords': '{{ supervisor.additional_keywords | join: "," | xml_escape }}',
+            'technologies_languages': '{{ supervisor.technologies_languages | join: "," | xml_escape }}',
+            'additional_details': `{{ supervisor.additional_details | strip_html | strip_newlines | xml_escape | replace: "`", "&#96;" | replace: "$", "&#36;" }}`,
+            'url': '{{ supervisors.url | xml_escape }}',
+            'data' :  {
+              'title': '{{ supervisor.title | xml_escape }}',
+              'research_group': '{{ supervisor.research_group | xml_escape }}',
+              'research_theme': '{{ supervisor.research_themes | jsonify }}',
+              'additional_keywords': '{{ supervisor.additional_keywords | jsonify }}',
+              'technologies_languages': '{{ supervisor.technologies_languages | jsonify }}',
+              'additional_details': `{{ supervisor.additional_details | strip  | replace: "`", "&#96;" | replace: "$", "&#36;" | markdownify }}`,
+              'office_hours': `{{ supervisor.office_hours | xml_escape  | strip  }}`,
+              'website': '{{ supervisor.website | xml_escape  }}',
+              'email': '{{ supervisor.email | xml_escape }}'
+            }
+          }
+          {% unless forloop.last %},{% endunless %}
+        {% endif %}
+      {% endfor %}
+    };
+
+    let searchQueryResults = {
+      documents: Object.keys(window.store), tokens: []
+    };
+
+    function goBack() {
+      history.back();
+    }
+  
+    (function () {
+      let research_groups = new Set()
+      let research_groups_slug = {}
+      {% for theme in site.data.groups.research_groups %}
+      research_groups.add('{{theme}}')
+      research_groups_slug['{{theme}}'] = '{{ theme | slugify}}'
+      {% endfor %}
+      {% for supervisor in site.supervisors %}
+        {% if supervisor.available %}
+        {% for theme in supervisor.research_theme %}
+  
+        research_groups.add('{{theme}}')
+        research_groups_slug['{{theme}}'] = '{{ theme | slugify}}'
+        {% endfor %}
+        {% endif %}
+      {% endfor %}
+      window.research_groups = Array.from(research_groups).map(el => {
+        return {
+          tag: el,
+          slug: research_groups_slug[el]
+        }
+      })
+      
+      let research_themes = new Set()
+      let research_themes_slug = {}
+      {% for theme in site.data.research_themes.research_themes %}
+      // research_themes.add('{{theme}}')
+      // research_themes_slug['{{theme}}'] = '{{ theme | slugify}}'
+      {% endfor %}
+      {% for supervisor in site.supervisors %}
+        {% if supervisor.available %}
+        {% for theme in supervisor.research_themes %}
+  
+        research_themes.add('{{theme}}')
+        research_themes_slug['{{theme}}'] = '{{ theme | slugify}}'
+        {% endfor %}
+        {% endif %}
+      {% endfor %}
+      window.research_themes = Array.from(research_themes).map(el => {
+        return {
+          tag: el,
+          slug: research_themes_slug[el]
+        }
+      })
+  
+      let additional_keywords = new Set()
+      let additional_keywords_slug = {}
+
+      {% for theme in site.data.additional_keywords.additional_keywords %}
+      // additional_keywords.add('{{theme}}')
+      // additional_keywords_slug['{{theme}}'] = '{{ theme | slugify}}'
+
+      {% endfor %}
+      {% for supervisor in site.supervisors %}
+        {% if supervisor.available %}
+        {% for theme in supervisor.additional_keywords %}
+  
+        additional_keywords.add('{{theme}}')
+        additional_keywords_slug['{{theme}}'] = '{{ theme | slugify}}'
+        {% endfor %}
+        {% endif %}
+      {% endfor %}
+  
+      window.additional_keywords = Array.from(additional_keywords).map(el => {
+        return {
+          tag: el,
+          slug: additional_keywords_slug[el]
+        }
+      })
+  
+      let technologies_languages = new Set()
+      let technologies_languages_slug = {}
+      {% for theme in site.data.technologies_languages.technologies_languages %}
+      // technologies_languages.add('{{theme}}')
+      // technologies_languages_slug['{{theme}}'] = '{{ theme | slugify}}'
+
+      {% endfor %}
+      {% for supervisor in site.supervisors %}
+        {% if supervisor.available %}
+        {% for theme in supervisor.technologies_languages %}
+  
+        technologies_languages.add('{{theme}}')
+        technologies_languages_slug['{{theme}}'] = '{{ theme | slugify}}'
+
+        {% endfor %}
+        {% endif %}
+      {% endfor %}
+
+      window.technologies_languages = Array.from(technologies_languages).map(el => {
+        return {
+          tag: el,
+          slug: technologies_languages_slug[el]
+        }
+      })
+    })()
+  </script>
+
+
+  {% include header.html %}
+  <div class="main-container">
+    {{ content }}
+  </div>
+  {% include footer.html %}
+  <script>
+    if (window.netlifyIdentity) {
+      window.netlifyIdentity.on("init", user => {
+        if (!user) {
+          window.netlifyIdentity.on("login", () => {
+            document.location.href = "/admin/";
+          });
+        }
+      });
+    }
+  </script>
+  <script src="/assets/scripts/lunr.js"></script>
+  <!-- <script src="https://unpkg.com/js-search@1.3.7/dist/umd/js-search.js"></script> -->
+  <script src="/assets/scripts/js-search.js"></script>
+  <script src="/assets/scripts/porter-stemmer.js"></script>
+  <script src="/assets/scripts/main.js"></script>
+</body>
+<!-- <script src="/assets/scripts/en.stemmer.js"></script> -->
+</html>
